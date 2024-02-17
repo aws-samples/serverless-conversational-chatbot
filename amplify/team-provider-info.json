@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-servrlsconvchat-dev-161240-authRole",
+      "UnauthRoleArn": "arn:aws:iam::346399954218:role/amplify-servrlsconvchat-dev-161240-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::346399954218:role/amplify-servrlsconvchat-dev-161240-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-servrlsconvchat-dev-161240-deployment",
+      "UnauthRoleName": "amplify-servrlsconvchat-dev-161240-unauthRole",
+      "StackName": "amplify-servrlsconvchat-dev-161240",
+      "StackId": "arn:aws:cloudformation:us-east-1:346399954218:stack/amplify-servrlsconvchat-dev-161240/9f35ae40-c8e7-11ee-b36d-0adb5fac72d9",
+      "AmplifyAppId": "d2wkbtg0784reh"
+    },
+    "categories": {
+      "auth": {
+        "servrlsconvchat553cf7ca": {}
+      }
+    }
+  }
+}
