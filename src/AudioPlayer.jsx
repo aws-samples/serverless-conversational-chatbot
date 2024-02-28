@@ -29,7 +29,7 @@ export const  AudioPlayer = ({audioFile})=>{
 
 return (
     <div>
-        <audio ref={audioRef} autoPlay ></audio>
+        <audio ref={audioRef} autoPlay controls ></audio>
        
     </div>
 )

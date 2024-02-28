@@ -1,6 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef,useEffect } from 'react';
 import './App.css';
-import { AppBar, Toolbar, Button, Typography, Stack } from "@mui/material";
+import { AppBar, Toolbar, Button, Typography, Stack ,Switch,FormGroup,FormControlLabel} from "@mui/material";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import Transcribe from './Transcribe';
@@ -29,24 +29,9 @@ function App() {
   const hubListenerCancelToken = Hub.listen('auth',async ({ payload }) => {
     switch (payload.event) {
       case 'signedIn':  
-      console.log('1111111111')
-      
-      
-      try {
-        const { username, userId, signInDetails } = await getCurrentUser();
-        console.log(`The username: ${username}`);
-        console.log(`The userId: ${userId}`);
-        console.log(`The signInDetails: ${signInDetails}`);
-      } catch (err) {
-        console.log(err);
-      }
-
-
-
-
-
-        const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
-          
+     
+        const { accessToken, idToken } = (await fetchAuthSession({ forceRefresh: true })).tokens ?? {};
+    
         setJwtToken(idToken.toString());
         const client = new CognitoIdentityClient({
           region: regionName,
@@ -65,10 +50,13 @@ function App() {
         setAccessKeyId(credentials.accessKeyId);
         setSecretAccessKey(credentials.secretAccessKey);
         setSessionToken(credentials.sessionToken);
+      
+
+
 
         break;
       case 'signedOut':
-        //clearStates();
+      
         console.log('user have been signedOut successfully.');
         break;
       
@@ -77,7 +65,7 @@ function App() {
 
   //hubListenerCancelToken();
 
-  const welcomeMsg = 'Hello. My Name is Nicolas. You can ask me anything, but you should start your question with "Nicolas".';
+  const welcomeMsg = 'I am a chatbot based on Amazon Bedrock. I will address your questions. To interact with me, press and hold the Talk button. When you finish talking, release the Talk button, and I will provide the answer.';
   const [jwtToken, setJwtToken] = useState('');
   const [accessKeyId, setAccessKeyId] = useState()
   const [secretAccessKey, setSecretAccessKey] = useState()
@@ -89,6 +77,12 @@ function App() {
   const childRef = useRef();
 
 
+  //We used the useEffect hook because we want to make sure the ref has been set on the 
+  //element and the element has been rendered to the DOM.
+  useEffect(() => {
+    const element = childRef.current;
+    console.log(element); // 👈️ element here
+  }, []);
 
   const clearStates = ()=>
   {
@@ -165,24 +159,31 @@ function App() {
   ];
 
   const  handleAddRow = async (text, speaker,isIgnoreForBedrock) => {
+    //console.log("isStopListeningMode1 "+isStopListeningMode);
     setRows((prevRows) => [...prevRows, { id: prevRows.length + 1, col1: speaker, col2: text }]);
-    
+   // console.log(speaker);
     if (speaker=="Bot") 
     {
      await invokePolly(text);
+     /*if (isClickToTalk)
+     {
+       console.log(isClickToTalk);
+       childRef.current.startRecordingExternally(isStopListeningMode);
+     }*/
     }
     else if (!isIgnoreForBedrock)
     {
+        console.log(isIgnoreForBedrock);
         let chatHistory = chat+("\n"+text);
         let response = await invokeBedrock(chatHistory);
-        console.log(response);
+    
         let answer  = response.completion;
-        console.log(answer);
+      
         chatHistory +=("\nBot: "+answer);
         setChat(chatHistory);
+       
         await handleAddRow(answer,"Bot",false);
-        //setRows((prevRows) => [...prevRows, { id: prevRows.length + 1, col1: "Bot", col2: answer }]);
-       // await invokePolly(answer);
+
     }
    
   };
@@ -190,7 +191,7 @@ function App() {
   return (
     <>
       
-      <Authenticator>
+      <Authenticator hideSignUp={true}>
       {({ signOut, user }) => (
         <main>
  <AppBar>
@@ -206,11 +207,31 @@ function App() {
                       signOut();
         }}>Sign Out
   </Button>
-
+  {/*}
+  <FormGroup>
+  <FormControlLabel control={<Switch color="warning" 
+                              defaultChecked={!isClickToTalk} 
+                              onChange={(e) => 
+                                {
+                                  SetIsClickToTalk(e.target.checked);
+                                  if (e.target.checked)
+                                  {
+                                    childRef.current.startRecordingExternally();
+                                  }
+                                  else
+                                  {
+                                    childRef.current.stopRecordingExternally();
+                                  }
+                                 
+                                }}
+                              />} label="Touchless speaking" />
+</FormGroup>
+                              */}
   </Stack>
   {/*Since we use async call to Identity pool, we have to wait for AWS credentials to be ready */}
   {accessKeyId && <Transcribe accessKeyId={accessKeyId} secretAccessKey={secretAccessKey} sessionToken={sessionToken} handleAddRow={handleAddRow}
     ref={childRef} />}
+     <AudioPlayer audioFile={audioFile} />
 </Toolbar>
 </AppBar>
 
@@ -221,18 +242,11 @@ function App() {
     params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
   }
 />
-<Button variant="contained"
-  onClick={
-    (e) => {
-      childRef.current.startRecordingExternally();
-      handleAddRow("kuku");
-    }
-  }>add</Button>
 </div>
         </main>
       )}
     </Authenticator>
-      <AudioPlayer audioFile={audioFile} />
+     
     </>
   )
 }
