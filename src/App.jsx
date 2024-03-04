@@ -22,8 +22,21 @@ import awsmobile from './aws-exports';
 Amplify.configure(awsconfig);
 
 function App() {
-  const identityPoolId = import.meta.env.VITE_COGNITO_IDENTITY_POOL_ID;
-  const regionName = import.meta.env.VITE_REGION_NAME;
+
+
+  const welcomeMsg = 'I am a chatbot based on Amazon Bedrock. I will address your questions. To interact with me, press and hold the Talk button. When you finish talking, release the Talk button, and I will provide the answer.';
+  const [jwtToken, setJwtToken] = useState('');
+  const [accessKeyId, setAccessKeyId] = useState()
+  const [secretAccessKey, setSecretAccessKey] = useState()
+  const [sessionToken, setSessionToken] = useState()
+  const [regionName,setRegionName] = useState(awsmobile.aws_project_region)
+  const [rows, setRows] = useState([])
+  const [audioFile, setAudioFile] = useState();
+  const [chat, setChat] = useState('');
+  const ODD_OPACITY = 0.2;
+  const childRef = useRef();
+
+
   const UserPoolId = "cognito-idp."+regionName+".amazonaws.com/"+awsmobile.aws_user_pools_id
      
   const hubListenerCancelToken = Hub.listen('auth',async ({ payload }) => {
@@ -63,45 +76,12 @@ function App() {
     }
   });
 
-  //hubListenerCancelToken();
-
-  const welcomeMsg = 'I am a chatbot based on Amazon Bedrock. I will address your questions. To interact with me, press and hold the Talk button. When you finish talking, release the Talk button, and I will provide the answer.';
-  const [jwtToken, setJwtToken] = useState('');
-  const [accessKeyId, setAccessKeyId] = useState()
-  const [secretAccessKey, setSecretAccessKey] = useState()
-  const [sessionToken, setSessionToken] = useState()
-  const [rows, setRows] = useState([])
-  const [audioFile, setAudioFile] = useState();
-  const [chat, setChat] = useState('');
-  const ODD_OPACITY = 0.2;
-  const childRef = useRef();
-
-
-  //We used the useEffect hook because we want to make sure the ref has been set on the 
-  //element and the element has been rendered to the DOM.
-  useEffect(() => {
-    const element = childRef.current;
-    console.log(element); // 👈️ element here
-  }, []);
-
-  const clearStates = ()=>
-  {
-    setRows([]);
-    setSecretAccessKey('');
-    setAccessKeyId('');
-    setSessionToken('');
-    setJwtToken('');
-    setChat('');
-  } 
-
-
-
   //get textual input and convert the text to speech by using Amazon Polly service
   const invokePolly = (text) => {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          let results = setAudioFile(await usePolly(text, accessKeyId, secretAccessKey, sessionToken,jwtToken))
+          let results = setAudioFile(await usePolly(text, accessKeyId, secretAccessKey, sessionToken,regionName))
           return resolve(results);
         } catch (err) {
           return reject(err);
@@ -109,12 +89,12 @@ function App() {
       })()
     });
   }
-
+  //local wrapper for bedrock client
   const invokeBedrock = async (text) => {
-    return await useBedrock(text, accessKeyId, secretAccessKey, sessionToken,UserPoolId,jwtToken)
+    return await useBedrock(text, accessKeyId, secretAccessKey, sessionToken,UserPoolId,jwtToken,regionName)
   }
 
-
+  //DataGrid wrapper in order to show alternative style for even records
   const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
     [`& .${gridClasses.row}.even`]: {
       backgroundColor: theme.palette.grey[200],
@@ -158,22 +138,17 @@ function App() {
     { field: 'col2', headerName: 'History', width: 600, sortable: false },
   ];
 
-  const  handleAddRow = async (text, speaker,isIgnoreForBedrock) => {
-    //console.log("isStopListeningMode1 "+isStopListeningMode);
+  const  handleAddRow = async (text, speaker) => {
+  
     setRows((prevRows) => [...prevRows, { id: prevRows.length + 1, col1: speaker, col2: text }]);
-   // console.log(speaker);
+
     if (speaker=="Bot") 
     {
      await invokePolly(text);
-     /*if (isClickToTalk)
-     {
-       console.log(isClickToTalk);
-       childRef.current.startRecordingExternally(isStopListeningMode);
-     }*/
     }
-    else if (!isIgnoreForBedrock)
+    else
     {
-        console.log(isIgnoreForBedrock);
+        //To support continuous conversation, we store the history locally in a Javascript variable.
         let chatHistory = chat+("\n"+text);
         let response = await invokeBedrock(chatHistory);
     
@@ -182,7 +157,7 @@ function App() {
         chatHistory +=("\nBot: "+answer);
         setChat(chatHistory);
        
-        await handleAddRow(answer,"Bot",false);
+        await handleAddRow(answer,"Bot");
 
     }
    
@@ -200,37 +175,16 @@ function App() {
   <Stack spacing={2} direction="row" sx={{ m: 2 }} > 
   <Button variant="contained" onClick={async (e) => {
           await invokePolly(welcomeMsg);
-          await handleAddRow(welcomeMsg, "Bot",true);
+          await handleAddRow(welcomeMsg, "Bot");
         }}>Guide Me
   </Button>
   <Button variant="contained" onClick={() => {
                       signOut();
         }}>Sign Out
   </Button>
-  {/*}
-  <FormGroup>
-  <FormControlLabel control={<Switch color="warning" 
-                              defaultChecked={!isClickToTalk} 
-                              onChange={(e) => 
-                                {
-                                  SetIsClickToTalk(e.target.checked);
-                                  if (e.target.checked)
-                                  {
-                                    childRef.current.startRecordingExternally();
-                                  }
-                                  else
-                                  {
-                                    childRef.current.stopRecordingExternally();
-                                  }
-                                 
-                                }}
-                              />} label="Touchless speaking" />
-</FormGroup>
-                              */}
+
   </Stack>
-  {/*Since we use async call to Identity pool, we have to wait for AWS credentials to be ready */}
-  {accessKeyId && <Transcribe accessKeyId={accessKeyId} secretAccessKey={secretAccessKey} sessionToken={sessionToken} handleAddRow={handleAddRow}
-    ref={childRef} />}
+  <Transcribe accessKeyId={accessKeyId} secretAccessKey={secretAccessKey} sessionToken={sessionToken} region={regionName} handleAddRow={handleAddRow} ref={childRef} />
      <AudioPlayer audioFile={audioFile} />
 </Toolbar>
 </AppBar>

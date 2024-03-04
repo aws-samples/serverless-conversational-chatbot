@@ -1,3 +1,4 @@
+//Amazon Polly client
 import { PollyClient, SynthesizeSpeechCommand } from "@aws-sdk/client-polly";
 
 
@@ -5,11 +6,13 @@ import { PollyClient, SynthesizeSpeechCommand } from "@aws-sdk/client-polly";
 export async function usePolly(text, 
                                accessKey,
                                secretKey,
-                               sessionToken
+                               sessionToken,
+                               regionName
                                )
  {
+    
     const client = new PollyClient({
-        region: import.meta.env.VITE_REGION_NAME,
+        region: regionName,
         credentials: {
             accessKeyId: accessKey,
             secretAccessKey: secretKey,

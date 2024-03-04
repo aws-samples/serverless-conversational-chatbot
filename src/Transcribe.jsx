@@ -1,3 +1,4 @@
+//Amazon Transcribe client. Capture the microphone stream and stream it to Amazon Cloud
 import {
     TranscribeStreamingClient,
     StartStreamTranscriptionCommand,
@@ -6,7 +7,7 @@ import MicrophoneStream from "microphone-stream";
 import Button from '@mui/material/Button';
 import SettingsVoiceIcon from '@mui/icons-material/SettingsVoice';
 import { Stack} from '@mui/material';
-import { useState , forwardRef,useImperativeHandle} from "react";
+import { useState , forwardRef} from "react";
 import MicIcon from '@mui/icons-material/Mic';
 import { Buffer } from 'buffer';
 import Process from 'process';
@@ -16,53 +17,7 @@ import Process from 'process';
 
 const Transcribe = forwardRef(function Transcribe(props, ref) {
 
-    /*
-    useImperativeHandle(ref, () =>  ({
-        stopRecordingExternally(){
-              stopRecording();
-              
-        },
-        startRecordingExternally(isStopListeningMode) {
-            console.log("mode "+isStopListeningMode);
-            setIsSleepMode(isStopListeningMode);
-        startRecording(async (callbackText)=>{
-            console.log(callbackText);
-            console.log("mode2 "+isStopListeningMode);
-            setIsSleepMode(isStopListeningMode);
-            console.log("setIsSleepMode2 "+isSleepMode);
-            if (!isSleepMode)
-            {
-                console.log(777777);
-                if (callbackText.toLowerCase().includes(stopListening))
-                {
-                    console.log(555555);
-                    await  props.handleAddRow(callbackText,"User",true);
-                    await  props.handleAddRow("I will no longer listen to your commands. To wake me up, say, Start listening.","Bot",true,true);
-                    
-                }                    
-            }
-            else
-            {
-                console.log(88888888);
-                if (callbackText.toLowerCase().includes(startListening))
-                {
-                    console.log(32222222);
-                    await  props.handleAddRow(callbackText, "User", true);
-                    await  props.handleAddRow("I will now listen to your commands. To stop listening, say, Stop listening.", "Bot", true,false);
-                    
-                }
-                else
-                {
-                    console.log(999999);
-                    await  props.handleAddRow(callbackText, "User", true,false);
-                }
-                
-            }
-        });
-        }
-    }));
-    */
-
+    //we need this to support Michrophone stream
     window.process = Process
     window.Buffer = Buffer;
 
@@ -70,9 +25,7 @@ const Transcribe = forwardRef(function Transcribe(props, ref) {
     const [micVisibility, setMicVisibility] = useState('hidden')
     const [isRecording, setIsRecording] = useState(false)
     const [language, setLanguage] = useState('en-US')
-    const stopListening = 'stop listening'
-    const startListening = 'start listening'
-    const [isSleepMode, setIsSleepMode] = useState(false)
+
 
 
 
@@ -96,7 +49,7 @@ const Transcribe = forwardRef(function Transcribe(props, ref) {
 
     const createTranscribeClient = () => {
         transcribeClient = new TranscribeStreamingClient({
-            region: import.meta.env.VITE_REGION_NAME,
+            region: props.region,
             credentials: {
                 accessKeyId: props.accessKeyId,
                 secretAccessKey: props.secretAccessKey,
@@ -143,9 +96,7 @@ const Transcribe = forwardRef(function Transcribe(props, ref) {
             const results = event.TranscriptEvent.Transcript.Results;
             if (results.length && !results[0]?.IsPartial) {
                 const newTranscript = results[0].Alternatives[0].Transcript;
-                console.log("isSleepMode "+isSleepMode);
-                //if (isSleepMode)
-                  stopRecording();
+                stopRecording();
                 
                 callback(newTranscript + " ");
 
@@ -175,10 +126,6 @@ const Transcribe = forwardRef(function Transcribe(props, ref) {
         }
     };
 
-
-   
-
-
     return (
         <div>
             <Stack spacing={2} direction="row" sx={{ m: 2 }} >
@@ -194,9 +141,7 @@ const Transcribe = forwardRef(function Transcribe(props, ref) {
                             e.preventDefault();
 
                             await startRecording( async (callbackText) => {
-                                console.log(callbackText);
-                                
-                                await  props.handleAddRow(callbackText,"User",false);
+                                await  props.handleAddRow(callbackText,"User");
                             });
                         }
                     }
@@ -217,7 +162,6 @@ const Transcribe = forwardRef(function Transcribe(props, ref) {
     );
 
 }
-///////
 )
 
 export default Transcribe;

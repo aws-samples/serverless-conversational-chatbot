@@ -1,19 +1,18 @@
+//bedrock client implementation for Claude model
 import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime"; 
-import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
-import awsmobile from './aws-exports';
-
 
 export async function useBedrock(text, 
                             accessKey,
                             secretKey,
                             sessionToken,
                             id_token,
-                            userPoolId
+                            userPoolId,
+                            region
                             )
 {
 
     const client = new BedrockRuntimeClient({
-                    region: import.meta.env.VITE_REGION_NAME,
+                    region: region,
                     credentials: {
                         accessKeyId: accessKey,
                         secretAccessKey: secretKey,
@@ -25,15 +24,15 @@ export async function useBedrock(text,
     });
 
     const basicPrompt=`
-   You are an AI assistant bot created to be helpful, harmless, and honest. The bot speaks in a friendly and conversational tone. 
+        You are an AI assistant bot created to be helpful, harmless, and honest. The bot speaks in a friendly and conversational tone. 
 
-The chat definition is user asking questions or making conversation, and bot responding in a helpful and inoffensive way, admitting when he doesn't know something and clarifying any potential misunderstandings. The bot avoids making assumptions and sticks to providing factual information to the user.
+        The chat definition is user asking questions or making conversation, and bot responding in a helpful and inoffensive way, admitting when he doesn't know something and clarifying any potential misunderstandings. The bot avoids making assumptions and sticks to providing factual information to the user.
 
-The chat proceeds as a friendly discussion, with bot answering the user's questions if he has the knowledge to do so, asking clarifying questions if the user's request is unclear, and apologizing and correcting himself if he makes a mistake. The tone remains casual and conversational throughout.
+        The chat proceeds as a friendly discussion, with bot answering the user's questions if he has the knowledge to do so, asking clarifying questions if the user's request is unclear, and apologizing and correcting himself if he makes a mistake. The tone remains casual and conversational throughout.
 
-The bot tried to limit the answer length as much as possible while still providing the relevant information. The chat start immediatelly.
+        The bot tried to limit the answer length as much as possible while still providing the relevant information. The chat start immediatelly.
 
-`
+        `
     
     const fullPrompt="\n\nHuman:\n\n"+basicPrompt+"\n"+text+"\n\nAssistant:";
     console.log(fullPrompt);
@@ -41,14 +40,16 @@ The bot tried to limit the answer length as much as possible while still providi
     const request = {
         "prompt" : fullPrompt,
         "max_tokens_to_sample": 150,
-        "temperature": 0.5 
+        "temperature": 0.5
+        
     }
 
-    const input = { // InvokeModelRequest
+    const input = { 
+        // InvokeModelRequest
         body: JSON.stringify(request),
         contentType: "application/json",
         accept:  "application/json",
-        modelId: "anthropic.claude-v2:1", // required
+        modelId: "anthropic.claude-v2:1"
         };
 
 
