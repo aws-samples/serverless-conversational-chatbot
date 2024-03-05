@@ -1,2 +1,3 @@
 node_modules
-src/assets/aws-exports.js
+src/aws-exports.js
+src/amplifyconfiguration.json
