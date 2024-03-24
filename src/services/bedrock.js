@@ -59,7 +59,7 @@ export async function useBedrock(text,
     const completion = JSON.parse(
         Buffer.from(response.body).toString('utf8')
     );
-   
+
    return completion;
 }
 

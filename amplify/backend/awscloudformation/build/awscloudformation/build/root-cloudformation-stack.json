@@ -152,15 +152,26 @@
         }
       }
     },
-    "authservrlsconvchat553cf7ca": {
+    "hostingamplifyhosting": {
       "Type": "AWS::CloudFormation::Stack",
       "Properties": {
-        "TemplateURL": "https://s3.amazonaws.com/amplify-servrlsconvchat-dev-161240-deployment/amplify-cfn-templates/auth/servrlsconvchat553cf7ca-cloudformation-template.json",
+        "TemplateURL": "https://s3.amazonaws.com/amplify-serverlessconversati-test-172708-deployment/amplify-cfn-templates/hosting/amplifyhosting-template.json",
         "Parameters": {
-          "identityPoolName": "servrlsconvchat553cf7ca_identitypool_553cf7ca",
+          "appId": "d3cbqktcmeqkyv",
+          "type": "manual",
+          "env": "test"
+        }
+      }
+    },
+    "authserverlessconversatiee8b86a8": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-serverlessconversati-test-172708-deployment/amplify-cfn-templates/auth/serverlessconversatiee8b86a8-cloudformation-template.json",
+        "Parameters": {
+          "identityPoolName": "serverlessconversatiee8b86a8_identitypool_ee8b86a8",
           "allowUnauthenticatedIdentities": false,
-          "resourceNameTruncated": "servrl553cf7ca",
-          "userPoolName": "servrlsconvchat553cf7ca_userpool_553cf7ca",
+          "resourceNameTruncated": "serveree8b86a8",
+          "userPoolName": "serverlessconversatiee8b86a8_userpool_ee8b86a8",
           "autoVerifiedAttributes": "email",
           "mfaConfiguration": "OFF",
           "mfaTypes": "SMS Text Message",
@@ -177,13 +188,12 @@
           "userpoolClientRefreshTokenValidity": 30,
           "userpoolClientWriteAttributes": "email",
           "userpoolClientReadAttributes": "email",
-          "userpoolClientLambdaRole": "servrl553cf7ca_userpoolclient_lambda_role",
+          "userpoolClientLambdaRole": "serveree8b86a8_userpoolclient_lambda_role",
           "userpoolClientSetAttributes": false,
-          "sharedId": "553cf7ca",
-          "resourceName": "servrlsconvchat553cf7ca",
+          "sharedId": "ee8b86a8",
+          "resourceName": "serverlessconversatiee8b86a8",
           "authSelections": "identityPoolAndUserPool",
           "useDefault": "default",
-          "usernameAttributes": "email",
           "userPoolGroupList": "",
           "serviceName": "Cognito",
           "usernameCaseSensitive": false,
@@ -202,7 +212,7 @@
           },
           "breakCircularDependency": true,
           "dependsOn": "",
-          "env": "dev"
+          "env": "test"
         }
       }
     },
@@ -210,7 +220,7 @@
       "DependsOn": [
         "AuthRole",
         "UnauthRole",
-        "authservrlsconvchat553cf7ca"
+        "authserverlessconversatiee8b86a8"
       ],
       "Type": "AWS::Lambda::Function",
       "Properties": {
@@ -320,7 +330,7 @@
         },
         "idpId": {
           "Fn::GetAtt": [
-            "authservrlsconvchat553cf7ca",
+            "authserverlessconversatiee8b86a8",
             "Outputs.IdentityPoolId"
           ]
         },

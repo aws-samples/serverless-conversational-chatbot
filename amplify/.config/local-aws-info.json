@@ -3,5 +3,15 @@
     "configLevel": "project",
     "useProfile": true,
     "profileName": "amplify"
+  },
+  "chatbot": {
+    "configLevel": "project",
+    "useProfile": true,
+    "profileName": "amplify"
+  },
+  "test": {
+    "configLevel": "project",
+    "useProfile": true,
+    "profileName": "amplify"
   }
 }

@@ -11,7 +11,7 @@ export const  AudioPlayer = ({audioFile})=>{
      if (audioFile)
        {
        
-        const audioArrayBuffer =  await audioFile.AudioStream.transformToByteArray()
+        const audioArrayBuffer =  await audioFile.AudioStream.transformToByteArray();
         const audioURL = URL.createObjectURL(new Blob([audioArrayBuffer],{type: "audio/mpeg"}));
         const audio=audioRef.current;
         audio.src = audioURL;

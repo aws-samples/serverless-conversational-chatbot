@@ -1,28 +1,40 @@
 {
   "providers": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-servrlsconvchat-dev-161240-authRole",
-      "UnauthRoleArn": "arn:aws:iam::346399954218:role/amplify-servrlsconvchat-dev-161240-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::346399954218:role/amplify-servrlsconvchat-dev-161240-authRole",
+      "AuthRoleName": "amplify-serverlessconversati-test-172708-authRole",
+      "UnauthRoleArn": "arn:aws:iam::346399954218:role/amplify-serverlessconversati-test-172708-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::346399954218:role/amplify-serverlessconversati-test-172708-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-servrlsconvchat-dev-161240-deployment",
-      "UnauthRoleName": "amplify-servrlsconvchat-dev-161240-unauthRole",
-      "StackName": "amplify-servrlsconvchat-dev-161240",
-      "StackId": "arn:aws:cloudformation:us-east-1:346399954218:stack/amplify-servrlsconvchat-dev-161240/9f35ae40-c8e7-11ee-b36d-0adb5fac72d9",
-      "AmplifyAppId": "d2wkbtg0784reh"
+      "DeploymentBucketName": "amplify-serverlessconversati-test-172708-deployment",
+      "UnauthRoleName": "amplify-serverlessconversati-test-172708-unauthRole",
+      "StackName": "amplify-serverlessconversati-test-172708",
+      "StackId": "arn:aws:cloudformation:us-east-1:346399954218:stack/amplify-serverlessconversati-test-172708/5379f210-e217-11ee-b1ee-0ec8cf4ba937",
+      "AmplifyAppId": "d3cbqktcmeqkyv"
+    }
+  },
+  "hosting": {
+    "amplifyhosting": {
+      "providerPlugin": "awscloudformation",
+      "service": "amplifyhosting",
+      "type": "manual",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-serverlessconversati-test-172708-deployment/amplify-cfn-templates/hosting/amplifyhosting-template.json",
+        "logicalId": "hostingamplifyhosting"
+      },
+      "lastPushTimeStamp": "2024-03-24T07:58:37.259Z",
+      "output": {},
+      "lastPushDirHash": "6eClP0cIsHdofCjJ9ushFd86v5o="
     }
   },
   "auth": {
-    "servrlsconvchat553cf7ca": {
+    "serverlessconversatiee8b86a8": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "customAuth": false,
       "frontendAuthConfig": {
         "socialProviders": [],
-        "usernameAttributes": [
-          "EMAIL"
-        ],
+        "usernameAttributes": [],
         "signupAttributes": [
           "EMAIL"
         ],
@@ -39,20 +51,20 @@
         ]
       },
       "providerMetadata": {
-        "s3TemplateURL": "https://s3.amazonaws.com/amplify-servrlsconvchat-dev-161240-deployment/amplify-cfn-templates/auth/servrlsconvchat553cf7ca-cloudformation-template.json",
-        "logicalId": "authservrlsconvchat553cf7ca"
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-serverlessconversati-test-172708-deployment/amplify-cfn-templates/auth/serverlessconversatiee8b86a8-cloudformation-template.json",
+        "logicalId": "authserverlessconversatiee8b86a8"
       },
-      "lastPushTimeStamp": "2024-02-11T14:16:20.715Z",
+      "lastPushTimeStamp": "2024-03-24T07:58:38.480Z",
       "output": {
-        "UserPoolId": "us-east-1_Au0Mc9S7S",
-        "AppClientIDWeb": "6tmeolcpo17u2bi2slcvf5ld90",
-        "AppClientID": "2p3ehvgpjntjop3vavlhjbp8ke",
-        "IdentityPoolId": "us-east-1:43bef668-7902-4f39-809f-47d381a78c5b",
-        "UserPoolArn": "arn:aws:cognito-idp:us-east-1:346399954218:userpool/us-east-1_Au0Mc9S7S",
-        "IdentityPoolName": "servrlsconvchat553cf7ca_identitypool_553cf7ca__dev",
-        "UserPoolName": "servrlsconvchat553cf7ca_userpool_553cf7ca"
+        "UserPoolId": "us-east-1_2QPQiwrO9",
+        "AppClientIDWeb": "2tks03mnsccpcg6fgolllvgvib",
+        "AppClientID": "7ng18mfnjtis1tv324jstpe2me",
+        "IdentityPoolId": "us-east-1:f3d6dfc1-650e-4929-bf4a-129158dee1f1",
+        "UserPoolArn": "arn:aws:cognito-idp:us-east-1:346399954218:userpool/us-east-1_2QPQiwrO9",
+        "IdentityPoolName": "serverlessconversatiee8b86a8_identitypool_ee8b86a8__test",
+        "UserPoolName": "serverlessconversatiee8b86a8_userpool_ee8b86a8"
       },
-      "lastPushDirHash": "kSGh0l+GWm+jb/kNQ9/gFM+f9+Q="
+      "lastPushDirHash": "ifllktj9bb+7uBBpi3uMWCoxXkY="
     }
   }
 }

@@ -1,15 +1,15 @@
-import { useState, useRef,useEffect } from 'react';
-import './App.css';
-import { AppBar, Toolbar, Button, Typography, Stack ,Switch,FormGroup,FormControlLabel} from "@mui/material";
+import { useState, useRef } from 'react';
+import '../css/App.css';
+import { AppBar, Toolbar, Button, Typography, Stack } from "@mui/material";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
-import Transcribe from './Transcribe';
-import { usePolly } from "./polly"
-import { useBedrock } from "./bedrock"
+import Transcribe from '../services/Transcribe';
+import { usePolly } from "../services/polly"
+import { useBedrock } from "../services/bedrock"
 import AudioPlayer from "./AudioPlayer";
 import { Amplify } from 'aws-amplify';
-import { fetchAuthSession,signOut,getCurrentUser } from 'aws-amplify/auth';
-import awsconfig from './aws-exports';
+import { fetchAuthSession } from 'aws-amplify/auth';
+import awsconfig from '../aws-exports';
 import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { Hub } from 'aws-amplify/utils';
@@ -17,7 +17,7 @@ import { Hub } from 'aws-amplify/utils';
 
 import { alpha, styled } from '@mui/material/styles';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import awsmobile from './aws-exports';
+import awsmobile from '../aws-exports';
 
 Amplify.configure(awsconfig);
 
@@ -37,7 +37,7 @@ function App() {
   const childRef = useRef();
 
 
-  const UserPoolId = "cognito-idp."+regionName+".amazonaws.com/"+awsmobile.aws_user_pools_id
+  const UserPoolId = "cognito-idp."+regionName+".amazonaws.com/"+awsmobile.aws_user_pools_id;
      
   const hubListenerCancelToken = Hub.listen('auth',async ({ payload }) => {
     switch (payload.event) {
@@ -58,7 +58,7 @@ function App() {
   
           })
         });
-        const credentials = await client.config.credentials()
+        const credentials = await client.config.credentials();
    
         setAccessKeyId(credentials.accessKeyId);
         setSecretAccessKey(credentials.secretAccessKey);
@@ -81,7 +81,7 @@ function App() {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          let results = setAudioFile(await usePolly(text, accessKeyId, secretAccessKey, sessionToken,regionName))
+          let results = setAudioFile(await usePolly(text, accessKeyId, secretAccessKey, sessionToken,regionName));
           return resolve(results);
         } catch (err) {
           return reject(err);
@@ -91,7 +91,7 @@ function App() {
   }
   //local wrapper for bedrock client
   const invokeBedrock = async (text) => {
-    return await useBedrock(text, accessKeyId, secretAccessKey, sessionToken,UserPoolId,jwtToken,regionName)
+    return await useBedrock(text, accessKeyId, secretAccessKey, sessionToken,UserPoolId,jwtToken,regionName);
   }
 
   //DataGrid wrapper in order to show alternative style for even records

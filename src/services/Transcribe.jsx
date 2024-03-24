@@ -21,10 +21,10 @@ const Transcribe = forwardRef(function Transcribe(props, ref) {
     window.process = Process
     window.Buffer = Buffer;
 
-    const [micColor, setMicColor] = useState('primary')
-    const [micVisibility, setMicVisibility] = useState('hidden')
-    const [isRecording, setIsRecording] = useState(false)
-    const [language, setLanguage] = useState('en-US')
+    const [micColor, setMicColor] = useState('primary');
+    const [micVisibility, setMicVisibility] = useState('hidden');
+    const [isRecording, setIsRecording] = useState(false);
+    const [language, setLanguage] = useState('en-US');
 
 
 
@@ -137,7 +137,7 @@ const Transcribe = forwardRef(function Transcribe(props, ref) {
                     startIcon={<SettingsVoiceIcon />}
                     onMouseDown={
                         async (e) => {
-                            setMicColor("secondary")
+                            setMicColor("secondary");
                             e.preventDefault();
 
                             await startRecording( async (callbackText) => {
