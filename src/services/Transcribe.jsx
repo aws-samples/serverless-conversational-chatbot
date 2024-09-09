@@ -11,11 +11,22 @@ import { useState , forwardRef} from "react";
 import MicIcon from '@mui/icons-material/Mic';
 import { Buffer } from 'buffer';
 import Process from 'process';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-
+const theme = createTheme({
+    palette: {
+      ochre: {
+        main: '#E3D026',
+        light: '#E3D026',
+        dark: '#E3D0265',
+        contrastText: '#242105',
+      },
+    },
+  });
 
 
 const Transcribe = forwardRef(function Transcribe(props, ref) {
+    
 
     //we need this to support Michrophone stream
     window.process = Process
@@ -128,6 +139,7 @@ const Transcribe = forwardRef(function Transcribe(props, ref) {
 
     return (
         <div>
+           <ThemeProvider theme={theme}>
             <Stack spacing={2} direction="row" sx={{ m: 2 }} >
                 <Button
                     variant="contained"
@@ -137,7 +149,7 @@ const Transcribe = forwardRef(function Transcribe(props, ref) {
                     startIcon={<SettingsVoiceIcon />}
                     onMouseDown={
                         async (e) => {
-                            setMicColor("secondary");
+                            setMicColor("ochre");
                             e.preventDefault();
 
                             await startRecording( async (callbackText) => {
@@ -156,7 +168,7 @@ const Transcribe = forwardRef(function Transcribe(props, ref) {
                 <MicIcon style={{ fontSize: 20, color: 'red' }} sx={{ visibility: micVisibility }} />
                
             </Stack>
-
+          </ThemeProvider>
 
         </div>
     );
