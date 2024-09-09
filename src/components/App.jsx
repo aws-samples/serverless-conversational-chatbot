@@ -5,7 +5,7 @@ import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import Transcribe from '../services/Transcribe';
 import { usePolly } from "../services/polly"
-import { useBedrock } from "../services/bedrock"
+import {  createBedrockClient, useBedrock } from "../services/bedrock"
 import AudioPlayer from "./AudioPlayer";
 import { Amplify } from 'aws-amplify';
 import { fetchAuthSession } from 'aws-amplify/auth';
@@ -32,7 +32,6 @@ function App() {
   const [regionName,setRegionName] = useState(awsmobile.aws_project_region)
   const [rows, setRows] = useState([])
   const [audioFile, setAudioFile] = useState();
-  const [chat, setChat] = useState('');
   const ODD_OPACITY = 0.2;
   const childRef = useRef();
 
@@ -64,8 +63,7 @@ function App() {
         setSecretAccessKey(credentials.secretAccessKey);
         setSessionToken(credentials.sessionToken);
       
-
-
+        await createBedrockClient( credentials.accessKeyId, credentials.secretAccessKey, credentials.sessionToken,idToken.toString(),idToken.toString(),regionName);
 
         break;
       case 'signedOut':
@@ -149,16 +147,8 @@ function App() {
     else
     {
         //To support continuous conversation, we store the history locally in a Javascript variable.
-        let chatHistory = chat+("\n"+text);
-        let response = await invokeBedrock(chatHistory);
-    
-        let answer  = response.completion;
-      
-        chatHistory +=("\nBot: "+answer);
-        setChat(chatHistory);
-       
-        await handleAddRow(answer,"Bot");
-
+        let response = await invokeBedrock(text);
+        await handleAddRow(response,"Bot");
     }
    
   };

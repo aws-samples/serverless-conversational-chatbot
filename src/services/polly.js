@@ -22,13 +22,13 @@ export async function usePolly(text,
 
     
     const input = {
-        "Engine": "neural",
+        "Engine": "generative",
         "OutputFormat": "mp3",
         "SampleRate": "16000",
         "Text": text,
         "TextType": "text",
         "LanguageCode": 'en-US',
-        "VoiceId": 'Arthur'
+        "VoiceId": 'Matthew'
       };
   
       const command = new SynthesizeSpeechCommand(input);
