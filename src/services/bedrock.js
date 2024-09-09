@@ -48,15 +48,12 @@ export async function addAssistantResponse(botResponse)
 }
 export async function useBedrock(promptText)
 {
-
-   
-    conversation.push(
+   conversation.push(
         {
           role: "user",
           content: [{ text: promptText }],
         });
-    
-
+  
     const response = await client.send(
         new ConverseCommand({
           modelId,

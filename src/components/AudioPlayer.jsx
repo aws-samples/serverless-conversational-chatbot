@@ -10,7 +10,6 @@ export const  AudioPlayer = ({audioFile})=>{
       try {
      if (audioFile)
        {
-       
         const audioArrayBuffer =  await audioFile.AudioStream.transformToByteArray();
         const audioURL = URL.createObjectURL(new Blob([audioArrayBuffer],{type: "audio/mpeg"}));
         const audio=audioRef.current;
@@ -31,7 +30,6 @@ export const  AudioPlayer = ({audioFile})=>{
 return (
     <div>
         <audio ref={audioRef} autoPlay controls ></audio>
-       
     </div>
 )
 

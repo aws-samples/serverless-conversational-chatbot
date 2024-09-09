@@ -1,8 +1,6 @@
 //Amazon Polly client
 import { PollyClient, SynthesizeSpeechCommand } from "@aws-sdk/client-polly";
 
-
-
 export async function usePolly(text, 
                                accessKey,
                                secretKey,
@@ -10,7 +8,6 @@ export async function usePolly(text,
                                regionName
                                )
  {
-    
     const client = new PollyClient({
         region: regionName,
         credentials: {
@@ -19,8 +16,7 @@ export async function usePolly(text,
             sessionToken:sessionToken
         },
     });
-
-    
+   
     const input = {
         "Engine": "generative",
         "OutputFormat": "mp3",
@@ -34,5 +30,4 @@ export async function usePolly(text,
       const command = new SynthesizeSpeechCommand(input);
       const response = await client.send(command);
       return response;
-
   }

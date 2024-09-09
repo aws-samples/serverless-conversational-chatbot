@@ -13,6 +13,8 @@ import { Buffer } from 'buffer';
 import Process from 'process';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+//for people with special needs the contrast should be at least 3:1
+//this is why I choose "ochre" color theme for "Talk" button
 const theme = createTheme({
     palette: {
       ochre: {
@@ -26,8 +28,7 @@ const theme = createTheme({
 
 
 const Transcribe = forwardRef(function Transcribe(props, ref) {
-    
-
+  
     //we need this to support Michrophone stream
     window.process = Process
     window.Buffer = Buffer;
@@ -36,9 +37,6 @@ const Transcribe = forwardRef(function Transcribe(props, ref) {
     const [micVisibility, setMicVisibility] = useState('hidden');
     const [isRecording, setIsRecording] = useState(false);
     const [language, setLanguage] = useState('en-US');
-
-
-
 
     let microphoneStream = undefined;
 
@@ -54,9 +52,6 @@ const Transcribe = forwardRef(function Transcribe(props, ref) {
             })
         );
     };
-
-
-  
 
     const createTranscribeClient = () => {
         transcribeClient = new TranscribeStreamingClient({
@@ -144,7 +139,6 @@ const Transcribe = forwardRef(function Transcribe(props, ref) {
                 <Button
                     variant="contained"
                     color={micColor}
-                    
                     disabled={!props.accessKeyId && !props.secretAccessKey}
                     startIcon={<SettingsVoiceIcon />}
                     onMouseDown={
@@ -166,13 +160,10 @@ const Transcribe = forwardRef(function Transcribe(props, ref) {
                         }
                     }>Talk</Button>
                 <MicIcon style={{ fontSize: 20, color: 'red' }} sx={{ visibility: micVisibility }} />
-               
             </Stack>
           </ThemeProvider>
-
-        </div>
+       </div>
     );
-
 }
 )
 
