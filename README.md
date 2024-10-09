@@ -17,3 +17,6 @@ For people with severe disabilities, the same operation can be implemented with 
 
 This project uses AWS Amplify technology. Read here about the installation steps for AWS Amplify. 
 https://docs.aws.amazon.com/amplify/latest/userguide/manual-deploys.html
+
+## Detailed explanation
+You can view AWS Blog [here](https://aws.amazon.com/blogs/machine-learning/build-a-serverless-voice-based-contextual-chatbot-for-people-with-disabilities-using-amazon-bedrock/)
